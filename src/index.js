@@ -1,14 +1,19 @@
-const path = require("path")        // This is the core node module, so no need to install it
-const http = require("http")
-const express = require("express")
-const socketio = require("socket.io")
-const Filter = require("bad-words")
-const { generateMessage, generateLocationMessage } = require("./utils/messages")
-const { addUser, removeUser, getUser, getUsersInRoom } = require("./utils/user")
+import path from "path"
+import { fileURLToPath } from "url"
+import http from "http"
+import express from "express"
+import { Server as SocketIOServer } from "socket.io"
+import Filter from "bad-words"
+import { generateMessage, generateLocationMessage } from "./utils/messages.js"
+import { addUser, removeUser, getUser, getUsersInRoom } from "./utils/user.js"
+
+// ES modules equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const app = express()
 const server = http.createServer(app)       // Here we are explicitly creating our server, express does it behind the scenes but we don't have access to it in the code
-const io = socketio(server)     // Socketio expects to be called with the raw http server
+const io = new SocketIOServer(server)     // Socketio expects to be called with the raw http server
 
 const port = process.env.PORT || 3000
 const publicDirectoryPath = path.join(__dirname, '../public')
